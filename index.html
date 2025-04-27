@@ -1,41 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-  <title>WebGIS cơ bản với Leaflet</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
+  <meta charset="UTF-8">
+  <title>WebGIS Nâng Cao</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
   <style>
     #map {
-      height: 100vh;
       width: 100%;
+      height: 100vh;
     }
   </style>
 </head>
 <body>
 
-<h3 style="text-align:center;">WebGIS của Huyền Cute hột me.js</h3>
 <div id="map"></div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 <script>
-  // Khởi tạo bản đồ và đặt vị trí trung tâm (tọa độ Việt Nam)
-  var map = L.map('map').setView([14.0583, 108.2772], 6);
+  // Khởi tạo bản đồ
+  var map = L.map('map').setView([21.0285, 105.8542], 13);
 
-  // Thêm lớp nền từ OpenStreetMap
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap contributors'
+  // Các lớp nền bản đồ
+  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  });
+
+  var googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+    attribution: '© Google'
+  });
+
+  var googleSatellite = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    attribution: '© Google Satellite'
+  });
+
+  var esriWorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri'
+  });
+
+  // Mặc định: OpenStreetMap
+  osm.addTo(map);
+
+  // Control chọn lớp nền
+  var baseMaps = {
+    "OpenStreetMap": osm,
+    "Google Streets": googleStreets,
+    "Google Satellite": googleSatellite,
+    "Esri World Imagery": esriWorldImagery
+  };
+
+  L.control.layers(baseMaps).addTo(map);
+
+  // Marker mẫu
+  var marker = L.marker([21.0285, 105.8542]).addTo(map)
+    .bindPopup('<b>Chào bạn!</b><br>Hà Nội.');
+
+  // Thanh tìm kiếm
+  L.Control.geocoder({
+    defaultMarkGeocode: true
   }).addTo(map);
-
-  // Thêm 1 marker (ví dụ tại Bắc Giang)
-  var marker = L.marker([21.24297, 106.05274]).addTo(map);
-  marker.bindPopup("<b>Bắc Giang</b><br>Chùa Bổ Đà").openPopup();
 </script>
 
 </body>
